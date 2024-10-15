@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Iniciar sesión</h1>
-        <form action="login.php" method="post">
-            <label for="correo">Correo electrónico:</label>
-            <input type="email" id="correo" name="correo" required><br><br>
-            <label for="contraseña">Contraseña:</label>
-            <input type="password" id="contraseña" name="contraseña" required><br><br>
-            <input type="submit" value="Iniciar sesión">
-        </form>
-        <p>No tienes una cuenta? <a href="registro.php">Regístrate</a></p>
-    </div>
-</body>
-<script type="module">
-    // Import the functions  you need from the SDKs you need
+  <div class="container">
+    <h1>Iniciar sesión</h1>
+    <form>
+      <label for="correo">Correo electrónico:</label>
+      <input type="email" id="correo" name="correo" required><br><br>
+      <label for="contraseña">Contraseña:</label>
+      <input type="password" id="contraseña" name="contraseña" required><br><br>
+      <input type="submit" value="Registrar" onclick="registrarUsuario()">
+      <input type="submit" value="Iniciar sesión" onclick="iniciarSesion()">
+    </form>
+    <p>No tienes una cuenta? <a href="registro.php">Regístrate</a></p>
+  </div>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
   
@@ -40,5 +41,37 @@
   
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-</script>
-</html>
+    const auth = getAuth(app);
+  
+    function registrarUsuario() {
+      const correo = document.getElementById("correo").value;
+      const contraseña = document.getElementById("contraseña").value;
+      createUserWithEmailAndPassword(auth, correo, contraseña)
+        .then((userCredential) => {
+          // Se ha creado un nuevo usuario
+          const user = userCredential.user;
+          console.log("Usuario creado:", user);
+        })
+        .catch((error) => {
+          // Se ha producido un error
+          console.error("Error al crear usuario:", error);
+        });
+    }
+  
+    function iniciarSesion() {
+      const correo = document.getElementById("correo").value;
+      const contraseña = document.getElementById("contraseña").value;
+      signInWithEmailAndPassword(auth, correo, contraseña)
+        .then((userCredential) => {
+          // Se ha iniciado sesión
+          const user = userCredential.user;
+          console.log("Usuario iniciado:", user);
+        })
+        .catch((error) => {
+          // Se ha producido un error
+          console.error("Error al iniciar sesión:", error);
+        });
+    }
+  </script>
+</body>
+</html
